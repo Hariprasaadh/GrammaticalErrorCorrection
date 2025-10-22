@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+
+
+# Models & Cache
+Models/
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.h5
+*.pkl
+*.pickle
+
+# Logs
+logs/
+*.log
+wandb/
+tensorboard/
+
+
+
+# OS
+.DS_Store
+
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
