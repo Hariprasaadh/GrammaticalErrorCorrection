@@ -46,10 +46,16 @@ GrammaticalErrorCorrection/
 │       ├── train.csv
 │       └── dev.csv
 ├── Models/
+│   ├── bangla_gec_mt5/
+│   │   └── best_model/
 │   ├── tamil_gec_model/
 │   │   └── best_model/
 │   └── telugu_gec_mt5/
 │       └── best_model/
+├── Bangla/
+│   ├── train.py
+│   ├── evaluate.py
+│   └── inference.py
 ├── Tamil/
 │   ├── train.py
 │   ├── evaluate.py
@@ -71,7 +77,7 @@ pip install torch transformers datasets pandas nltk
 
 ### Training
 
-#### Tamil 
+#### Tamil (91 samples)
 ```bash
 cd Tamil
 python train.py
@@ -84,7 +90,7 @@ python train.py
 - Training Time: ~14 minutes (RTX 3050 4GB)
 - Final Loss: 1.22
 
-#### Telugu
+#### Telugu (599 samples)
 ```bash
 cd Telugu
 python train.py
@@ -97,6 +103,19 @@ python train.py
 - Training Time: ~7-8 minutes (RTX 3050 4GB)
 - Final Loss: ~2.1-2.4
 
+#### Bangla (598 samples)
+```bash
+cd Bangla
+python train.py
+```
+
+**Configuration:**
+- Model: `google/mt5-small`
+- Epochs: 10
+- Batch Size: 4 (effective: 4 with gradient accumulation)
+- Training Time: ~8-10 minutes (RTX 3050 4GB)
+- Final Loss: ~2.0-2.5
+
 ### Evaluation
 
 ```bash
@@ -106,6 +125,10 @@ python evaluate.py
 
 # Telugu
 cd Telugu
+python evaluate.py
+
+# Bangla
+cd Bangla
 python evaluate.py
 ```
 
@@ -140,10 +163,22 @@ Generates `evaluation_results.json` with:
 | **Test Samples** | 100 |
 | **Training Time** | ~7-8 minutes |
 
+### Bangla (mT5-small, 10 epochs)
+| Metric | Score |
+|--------|-------|
+| **GLEU Score** | **0.6814** |
+| **BLEU Score** | 0.6666 |
+| **Character Error Rate** | 0.3706 |
+| **Exact Match** | 2/101 |
+| **Training Samples** | 538 |
+| **Test Samples** | 101 |
+| **Training Time** | ~8-10 minutes |
+
 ### Key Findings
 - **More data = Better results:** Telugu (599 samples) achieved significantly higher GLEU (0.72) compared to Tamil (91 samples, GLEU 0.53)
-- **Fast convergence:** Both models trained in under 15 minutes on RTX 3050 4GB
+- **Fast convergence:** All models train in under 15 minutes on RTX 3050 4GB
 - **Low-resource effectiveness:** mT5-small performs well even with minimal training data (91 samples)
+- **Consistent performance:** Similar-sized datasets show comparable results (Bangla: 598 samples, GLEU 0.68; Telugu: 599 samples, GLEU 0.72)
 
 ### Inference
 
@@ -154,6 +189,10 @@ python inference.py
 
 # Telugu
 cd Telugu
+python inference.py
+
+# Bangla
+cd Bangla
 python inference.py
 ```
 
@@ -173,6 +212,13 @@ GLEU: 0.5344
 Input:  అదుపులో ఉన్నంత వరకు ఎలాంటి హాని జరగదు.
 Output: అదుపులో ఉన్నంత వరకు ఎలాంటి హాని జరగదు.
 GLEU: 0.7217
+```
+
+### Bangla Language
+```
+Input:  ওই রূপ এবং ওই রুচির মূল্য কী করখ দেওয়া যায় তাই ভাবছি।
+Output: এবং ওই রুচির মূল্য কী করখ দেওয়া যায় তাই ভাবছি।
+GLEU: 0.6814
 ```
 
 ### Hindi Language
