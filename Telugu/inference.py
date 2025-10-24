@@ -109,9 +109,9 @@ def correct_single(model_path, sentence, num_beams=5):
 
 if __name__ == "__main__":
     # Set paths directly in code
-    model_path = '../Models/telugu_gec_indicbart/best_model'
+    model_path = '../Models/telugu_gec_mt5/best_model'
     
-    print(f"Telugu GEC Inference (IndicBART)")
+    print(f"Telugu GEC Inference (mT5-small)")
     print(f"Model: {model_path}")
     print("="*60)
     

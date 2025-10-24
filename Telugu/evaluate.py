@@ -58,6 +58,7 @@ def generate_corrections(sentences, tokenizer, model, device, num_beams=5):
             )
         
         corrected = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+        corrected = ' '.join(corrected.split())  
         corrections.append(corrected)
     
     return corrections
@@ -217,12 +218,12 @@ def evaluate(model_path, test_file, output_file='evaluation_results.json', num_b
 
 if __name__ == "__main__":
     # Set paths directly in code
-    model_path = '../Models/telugu_gec_indicbart/best_model'
+    model_path = '../Models/telugu_gec_mt5/best_model'
     test_file = '../Dataset/telugu/dev.csv'
     output_file = 'evaluation_results.json'
     num_beams = 5
     
-    print(f"Evaluating Telugu GEC Model (IndicBART)")
+    print(f"Evaluating Telugu GEC Model (mT5-small)")
     print(f"Model: {model_path}")
     print(f"Test file: {test_file}")
     print(f"Output: {output_file}")

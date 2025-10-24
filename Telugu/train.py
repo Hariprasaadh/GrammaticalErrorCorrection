@@ -199,18 +199,18 @@ def train_model(train_file, output_dir='../Models/telugu_gec_model', epochs=20, 
 
 if __name__ == "__main__":
     train_file = '../Dataset/telugu/train.csv'
-    output_dir = '../Models/telugu_gec_indicbart'
-    epochs = 15  # Increased for better convergence
-    batch_size = 4  # Larger batch size
+    output_dir = '../Models/telugu_gec_mt5'
+    epochs = 10  # Fast training with mT5
+    batch_size = 4
     
-    print(f"Training Telugu GEC Model with IndicBART (Better Quality Mode)")
+    print(f"Training Telugu GEC Model with mT5-small")
     print(f"Train file: {train_file}")
     print(f"Output directory: {output_dir}")
     print(f"Epochs: {epochs}")
     print(f"Batch size: {batch_size}")
     print(f"Effective batch size: {batch_size * 1} (with gradient accumulation)")
     print(f"Evaluation during training: Disabled (run evaluate.py after training)")
-    print(f"Estimated time: 10-12 minutes")
+    print(f"Estimated time: 7-8 minutes")
     print(f"Mixed Precision: {'Enabled (GPU)' if torch.cuda.is_available() else 'Disabled (CPU)'}")
     print("="*60)
     
