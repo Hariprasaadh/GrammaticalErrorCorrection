@@ -48,11 +48,23 @@ GrammaticalErrorCorrection/
 ├── Models/
 │   ├── bangla_gec_mt5/
 │   │   └── best_model/
+│   ├── hindi_gec_mt5/
+│   │   └── best_model/
+│   ├── malayalam_gec_mt5/
+│   │   └── best_model/
 │   ├── tamil_gec_model/
 │   │   └── best_model/
 │   └── telugu_gec_mt5/
 │       └── best_model/
 ├── Bangla/
+│   ├── train.py
+│   ├── evaluate.py
+│   └── inference.py
+├── Hindi/
+│   ├── train.py
+│   ├── evaluate.py
+│   └── inference.py
+├── Malayalam/
 │   ├── train.py
 │   ├── evaluate.py
 │   └── inference.py
@@ -116,6 +128,30 @@ python train.py
 - Training Time: ~8-10 minutes (RTX 3050 4GB)
 - Final Loss: ~2.0-2.5
 
+#### Hindi (600 samples)
+```bash
+cd Hindi
+python train.py
+```
+
+**Configuration:**
+- Model: `google/mt5-small`
+- Epochs: 10
+- Batch Size: 4 (effective: 4 with gradient accumulation)
+- Training Time: ~8-10 minutes (RTX 3050 4GB)
+
+#### Malayalam (313 samples)
+```bash
+cd Malayalam
+python train.py
+```
+
+**Configuration:**
+- Model: `google/mt5-small`
+- Epochs: 10
+- Batch Size: 4 (effective: 4 with gradient accumulation)
+- Training Time: ~5-7 minutes (RTX 3050 4GB)
+
 ### Evaluation
 
 ```bash
@@ -129,6 +165,14 @@ python evaluate.py
 
 # Bangla
 cd Bangla
+python evaluate.py
+
+# Hindi
+cd Hindi
+python evaluate.py
+
+# Malayalam
+cd Malayalam
 python evaluate.py
 ```
 
@@ -174,11 +218,35 @@ Generates `evaluation_results.json` with:
 | **Test Samples** | 101 |
 | **Training Time** | ~8-10 minutes |
 
+### Hindi (mT5-small, 10 epochs)
+| Metric | Score |
+|--------|-------|
+| **GLEU Score** | **0.8236** |
+| **BLEU Score** | 0.8098 |
+| **Character Error Rate** | 0.2126 |
+| **Exact Match** | 7/107 |
+| **Training Samples** | 600 |
+| **Test Samples** | 107 |
+| **Training Time** | ~8-10 minutes |
+
+### Malayalam (mT5-small, 10 epochs)
+| Metric | Score |
+|--------|-------|
+| **GLEU Score** | **0.6725** |
+| **BLEU Score** | 0.6470 |
+| **Character Error Rate** | 0.4401 |
+| **Exact Match** | 0/50 |
+| **Training Samples** | 313 |
+| **Test Samples** | 50 |
+| **Training Time** | ~5-7 minutes |
+
 ### Key Findings
-- **More data = Better results:** Telugu (599 samples) achieved significantly higher GLEU (0.72) compared to Tamil (91 samples, GLEU 0.53)
+- **Hindi achieves highest performance:** Hindi (600 samples, GLEU 0.82) shows the best results across all languages
+- **More data = Better results:** Large datasets (Hindi: 600, Telugu: 599, Bangla: 598) significantly outperform smaller datasets (Tamil: 91, Malayalam: 313)
 - **Fast convergence:** All models train in under 15 minutes on RTX 3050 4GB
-- **Low-resource effectiveness:** mT5-small performs well even with minimal training data (91 samples)
-- **Consistent performance:** Similar-sized datasets show comparable results (Bangla: 598 samples, GLEU 0.68; Telugu: 599 samples, GLEU 0.72)
+- **Low-resource effectiveness:** mT5-small performs well even with minimal training data (91 samples for Tamil achieves 0.53 GLEU)
+- **Consistent performance across similar datasets:** Similar-sized datasets show comparable results (Bangla: 598 samples, GLEU 0.68; Telugu: 599 samples, GLEU 0.72; Hindi: 600 samples, GLEU 0.82)
+- **Model scalability:** Smaller datasets (Malayalam: 313 samples) train faster (~5-7 min) while maintaining reasonable accuracy (GLEU 0.67)
 
 ### Inference
 
@@ -193,6 +261,14 @@ python inference.py
 
 # Bangla
 cd Bangla
+python inference.py
+
+# Hindi
+cd Hindi
+python inference.py
+
+# Malayalam
+cd Malayalam
 python inference.py
 ```
 
@@ -225,14 +301,18 @@ GLEU: 0.6814
 
 ### Hindi Language
 ```
-Input:  इस वस्तुका उपयोग मत करो।
-Output: इस वस्तु का उपयोग मत करो।
+Input:  दरअसल मानवीय गतिविधिया जैसे कि शहरीकरण, औद्योगिकरण इत्यादि के कारण विश्व का तापमान तेजी से बढ़ रहा है।
+Output: परअसल मानवीय गतिविधिया जैसे कि शहरीकरण, औद्योगिकरण इत्यादि के कारण विश्व का तापमान तेजी से बढ़ रहा है।
+Reference: दरअसल मानवीय गतिविधियां जैसे कि शहरीकरण, औद्योगीकरण इत्यादि के कारण विश्व का तापमान तेजी से बढ़ रहा है।
+GLEU: 0.8236
 ```
 
 ### Malayalam Language
 ```
-Input:  നമ്മുടെ ജീവൈശലി അനുസരിച്ച് മാലിന്യങ്ങൾ ഉണ്ടാകും എന്നതിൽ സംശയമില്ല.
-Output: നമ്മുടെ ജീവിതൈശലി അനുസരിച്ച് മാലിന്യങ്ങൾ ഉണ്ടാകും എന്നതിൽ സംശയമില്ല.
+Input:  നമ്മള്ളുടെ ജീവശൈലിക്കനുസരിച്ച് മാലിന്യങ്ങൾ ഉണ്ടാകും എന്നതിൽ സംശയമില്ല.
+Output: ആലിന്യങ്ങൾ ഉണ്ടാകും എന്നതിൽ സംശയമില്ല.
+Reference: നമ്മുടെ ജീവിതശൈലിക്കനുസരിച്ച് മാലിന്യങ്ങൾ ഉണ്ടാകും എന്നതിൽ സംശയമില്ല.
+GLEU: 0.6725
 ```
 
 ## 🎯 Model Architecture
