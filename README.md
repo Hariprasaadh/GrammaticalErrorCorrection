@@ -97,9 +97,7 @@ python train.py
 
 **Configuration:**
 - Model: `google/mt5-small`
-- Epochs: 20
 - Batch Size: 2 (effective: 4 with gradient accumulation)
-- Training Time: ~14 minutes (RTX 3050 4GB)
 - Final Loss: 1.22
 
 #### Telugu (599 samples)
@@ -110,9 +108,7 @@ python train.py
 
 **Configuration:**
 - Model: `google/mt5-small`
-- Epochs: 10
 - Batch Size: 4 (effective: 4 with gradient accumulation)
-- Training Time: ~7-8 minutes (RTX 3050 4GB)
 - Final Loss: ~2.1-2.4
 
 #### Bangla (598 samples)
@@ -123,9 +119,7 @@ python train.py
 
 **Configuration:**
 - Model: `google/mt5-small`
-- Epochs: 10
 - Batch Size: 4 (effective: 4 with gradient accumulation)
-- Training Time: ~8-10 minutes (RTX 3050 4GB)
 - Final Loss: ~2.0-2.5
 
 #### Hindi (600 samples)
@@ -136,9 +130,7 @@ python train.py
 
 **Configuration:**
 - Model: `google/mt5-small`
-- Epochs: 10
 - Batch Size: 4 (effective: 4 with gradient accumulation)
-- Training Time: ~8-10 minutes (RTX 3050 4GB)
 
 #### Malayalam (313 samples)
 ```bash
@@ -148,9 +140,7 @@ python train.py
 
 **Configuration:**
 - Model: `google/mt5-small`
-- Epochs: 10
 - Batch Size: 4 (effective: 4 with gradient accumulation)
-- Training Time: ~5-7 minutes (RTX 3050 4GB)
 
 ### Evaluation
 
@@ -180,73 +170,60 @@ Generates `evaluation_results.json` with:
 - GLEU Score
 - BLEU Score
 - Character Error Rate (CER)
-- Exact Match Accuracy
 - Sample predictions
 
 ## 📊 Results
 
-### Tamil (mT5-small, 20 epochs)
+### Tamil (mT5-small)
 | Metric | Score |
 |--------|-------|
 | **GLEU Score** | **0.5344** |
 | **BLEU Score** | 0.5059 |
 | **Character Error Rate** | 0.9917 |
-| **Exact Match** | 0/16 |
 | **Training Samples** | 91 |
 | **Test Samples** | 16 |
-| **Training Time** | ~14 minutes |
 
-### Telugu (mT5-small, 10 epochs)
+### Telugu (mT5-small)
 | Metric | Score |
 |--------|-------|
 | **GLEU Score** | **0.7217** |
 | **BLEU Score** | 0.6902 |
 | **Character Error Rate** | 0.2987 |
-| **Exact Match** | 1/100 |
 | **Training Samples** | 539 |
 | **Test Samples** | 100 |
-| **Training Time** | ~7-8 minutes |
 
-### Bangla (mT5-small, 10 epochs)
+### Bangla (mT5-small)
 | Metric | Score |
 |--------|-------|
 | **GLEU Score** | **0.9278** |
 | **BLEU Score** | 0.9252 |
 | **Character Error Rate** | 0.0442 |
-| **Exact Match** | 25/101 |
 | **Training Samples** | 538 |
 | **Test Samples** | 101 |
-| **Training Time** | ~8-10 minutes |
 
-### Hindi (mT5-small, 10 epochs)
+### Hindi (mT5-small)
 | Metric | Score |
 |--------|-------|
 | **GLEU Score** | **0.8236** |
 | **BLEU Score** | 0.8098 |
 | **Character Error Rate** | 0.2126 |
-| **Exact Match** | 7/107 |
 | **Training Samples** | 600 |
 | **Test Samples** | 107 |
-| **Training Time** | ~8-10 minutes |
 
-### Malayalam (mT5-small, 10 epochs)
+### Malayalam (mT5-small)
 | Metric | Score |
 |--------|-------|
 | **GLEU Score** | **0.6725** |
 | **BLEU Score** | 0.6470 |
 | **Character Error Rate** | 0.4401 |
-| **Exact Match** | 0/50 |
 | **Training Samples** | 313 |
 | **Test Samples** | 50 |
-| **Training Time** | ~5-7 minutes |
 
 ### Key Findings
 - **Bangla achieves highest performance:** Bangla (538 samples, GLEU 0.93) shows exceptional results, followed by Hindi (600 samples, GLEU 0.82)
-- **More data = Better results:** Large datasets (Bangla: 538, Hindi: 600, Telugu: 599) significantly outperform smaller datasets (Tamil: 91, Malayalam: 313)
-- **Fast convergence:** All models train in under 15 minutes on RTX 3050 4GB
+- **Data quality matters:** Well-curated datasets lead to better performance
 - **Low-resource effectiveness:** mT5-small performs well even with minimal training data (91 samples for Tamil achieves 0.53 GLEU)
-- **Excellent exact match rate:** Bangla achieves 24.75% exact matches (25/101), showing strong correction capability
-- **Model scalability:** Smaller datasets (Malayalam: 313 samples) train faster (~5-7 min) while maintaining reasonable accuracy (GLEU 0.67)
+- **Scalable approach:** Works efficiently on consumer-grade hardware (RTX 3050 4GB)
 
 ### Inference
 
@@ -337,7 +314,7 @@ GLEU: 0.6725
 **2. Strong Performance**
 - Telugu: GLEU 0.72 with just 599 training samples
 - Tamil: GLEU 0.53 with only 91 training samples
-- Fast convergence in under 15 minutes
+- Fast convergence with limited data
 
 **3. Resource Efficiency**
 - Works on 4GB VRAM (RTX 3050)
@@ -356,22 +333,18 @@ GLEU: 0.6725
 
 ### Optimizing for Different Scenarios
 
-**Faster Training (Less Accuracy):**
+**Standard Configuration:**
 ```python
-epochs = 8
 batch_size = 4
 learning_rate = 5e-5
 gradient_accumulation_steps = 1
-# Expected: 5-7 minutes, GLEU 0.50-0.65
 ```
 
-**Better Accuracy (Slower Training):**
+**Small Datasets:**
 ```python
-epochs = 20
 batch_size = 2
 learning_rate = 1e-4
 gradient_accumulation_steps = 2
-# Expected: 10-15 minutes, GLEU 0.55-0.72
 ```
 
 **Low Memory (< 4GB VRAM):**
@@ -389,7 +362,7 @@ batch_size = 8
 gradient_accumulation_steps = 1
 max_length = 128
 fp16 = True
-# Fastest training with powerful GPUs
+# For faster training with powerful GPUs
 ```
 
 ## 📊 Evaluation Metrics
@@ -415,11 +388,6 @@ fp16 = True
 - Telugu: 0.30 (Good)
 - Tamil: 0.99 (Needs improvement)
 
-### Exact Match Accuracy
-- Percentage of perfectly corrected sentences
-- Strict metric, often low even for good models
-- Less important than GLEU/BLEU for GEC tasks
-
 ## 🐛 Troubleshooting
 
 ### Out of Memory Error
@@ -442,7 +410,6 @@ eval_strategy = "no"
 ```
 
 ### Poor Results
-- **Increase training epochs:** 15-20 for better convergence
 - **Check for spacing issues:** GLEU is sensitive to whitespace
 - **Collect more training data:** More data = better results (Telugu vs Tamil)
 - **Adjust learning rate:** Try 5e-5 to 1e-4
@@ -457,8 +424,7 @@ use_safetensors=False
 ```
 
 ### `<extra_id_0>` tokens in output
-- Normal for T5 models during early training
-- Reduces with more epochs
+- Normal for T5 models during training
 - Use `skip_special_tokens=True` in decoding (already done)
 
 ## 📚 Dataset Format
