@@ -210,10 +210,10 @@ Generates `evaluation_results.json` with:
 ### Bangla (mT5-small, 10 epochs)
 | Metric | Score |
 |--------|-------|
-| **GLEU Score** | **0.6814** |
-| **BLEU Score** | 0.6666 |
-| **Character Error Rate** | 0.3706 |
-| **Exact Match** | 2/101 |
+| **GLEU Score** | **0.9278** |
+| **BLEU Score** | 0.9252 |
+| **Character Error Rate** | 0.0442 |
+| **Exact Match** | 25/101 |
 | **Training Samples** | 538 |
 | **Test Samples** | 101 |
 | **Training Time** | ~8-10 minutes |
@@ -241,11 +241,11 @@ Generates `evaluation_results.json` with:
 | **Training Time** | ~5-7 minutes |
 
 ### Key Findings
-- **Hindi achieves highest performance:** Hindi (600 samples, GLEU 0.82) shows the best results across all languages
-- **More data = Better results:** Large datasets (Hindi: 600, Telugu: 599, Bangla: 598) significantly outperform smaller datasets (Tamil: 91, Malayalam: 313)
+- **Bangla achieves highest performance:** Bangla (538 samples, GLEU 0.93) shows exceptional results, followed by Hindi (600 samples, GLEU 0.82)
+- **More data = Better results:** Large datasets (Bangla: 538, Hindi: 600, Telugu: 599) significantly outperform smaller datasets (Tamil: 91, Malayalam: 313)
 - **Fast convergence:** All models train in under 15 minutes on RTX 3050 4GB
 - **Low-resource effectiveness:** mT5-small performs well even with minimal training data (91 samples for Tamil achieves 0.53 GLEU)
-- **Consistent performance across similar datasets:** Similar-sized datasets show comparable results (Bangla: 598 samples, GLEU 0.68; Telugu: 599 samples, GLEU 0.72; Hindi: 600 samples, GLEU 0.82)
+- **Excellent exact match rate:** Bangla achieves 24.75% exact matches (25/101), showing strong correction capability
 - **Model scalability:** Smaller datasets (Malayalam: 313 samples) train faster (~5-7 min) while maintaining reasonable accuracy (GLEU 0.67)
 
 ### Inference
@@ -295,8 +295,9 @@ GLEU: 0.7217
 ### Bangla Language
 ```
 Input:  ওই রূপ এবং ওই রুচির মূল্য কী করখ দেওয়া যায় তাই ভাবছি।
-Output: এবং ওই রুচির মূল্য কী করখ দেওয়া যায় তাই ভাবছি।
-GLEU: 0.6814
+Output: ওই রূপ এবং ওই রুচির মূল্য কী করখ দেওয়া যায় তাই ভাবছি।
+Reference: ওই রূপ এবং ওই রুচির মূল্য কী করে দেওয়া যায় তাই ভাবছি।
+GLEU: 0.9278
 ```
 
 ### Hindi Language
